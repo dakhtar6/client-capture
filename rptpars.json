@@ -1,0 +1,151 @@
+{
+    "tranID": 147072,
+    "result": {
+        "inputField": [
+            {
+                "id": "fn_cp",
+                "label": "Customer First",
+                "isEditable": true,
+                "isRequired": true,
+                "isDesired": false,
+                "isHidden": false,
+                "keyboardType": null,
+                "fieldType": "TextInputField",
+                "items": null,
+                "shortcuts": null,
+                "defaultText": "David",
+                "maxlength": 0,
+                "isDefaultScannableField": false,
+                "defaultNumber": null,
+                "defaultQty": 0,
+                "denominationInCents": 1,
+                "defaultSelectedItem": null
+            },
+            {
+                "id": "ln_cp",
+                "label": "Last!",
+                "isEditable": true,
+                "isRequired": true,
+                "isDesired": false,
+                "isHidden": false,
+                "keyboardType": null,
+                "fieldType": "TextInputField",
+                "items": null,
+                "shortcuts": null,
+                "defaultText": "Ross",
+                "maxlength": 0,
+                "isDefaultScannableField": false,
+                "defaultNumber": null,
+                "defaultQty": 0,
+                "denominationInCents": 2,
+                "defaultSelectedItem": null
+            },
+            {
+                "id": "tel_cp",
+                "label": "Digits",
+                "isEditable": true,
+                "isRequired": true,
+                "isDesired": false,
+                "isHidden": false,
+                "keyboardType": null,
+                "fieldType": "TextInputField",
+                "items": null,
+                "shortcuts": null,
+                "defaultText": "343-554-3232",
+                "maxlength": 0,
+                "isDefaultScannableField": false,
+                "defaultNumber": null,
+                "defaultQty": 0,
+                "denominationInCents": 3,
+                "defaultSelectedItem": null
+            },
+            {
+                "id": "email_cp",
+                "label": "Email",
+                "isEditable": true,
+                "isRequired": true,
+                "isDesired": false,
+                "isHidden": false,
+                "keyboardType": null,
+                "fieldType": "TextInputField",
+                "items": null,
+                "shortcuts": [
+                    "@gmail.com,@kwi.com"
+                ],
+                "defaultText": "dross@kwi.com",
+                "maxlength": 0,
+                "isDefaultScannableField": false,
+                "defaultNumber": null,
+                "defaultQty": 0,
+                "denominationInCents": 4,
+                "defaultSelectedItem": null
+            }, 
+            {
+                "id": "tel2_cp",
+                "label": "Cell Phone",
+                "isEditable": true,
+                "isRequired": true,
+                "isDesired": false,
+                "isHidden": false,
+                "keyboardType": null,
+                "fieldType": "NumericInputField",
+                "items": null,
+                "shortcuts": [
+                    "@gmail.com,@kwi.com"
+                ],
+                "defaultText": "",
+                "maxlength": 0,
+                "isDefaultScannableField": false,
+                "defaultNumber": 123456789,
+                "defaultQty": 0,
+                "denominationInCents": 4,
+                "defaultSelectedItem": null
+            },
+            {
+                "id": "st_cp",
+                "label": "State",
+                "isEditable": true,
+                "isRequired": true,
+                "isDesired": false,
+                "isHidden": false,
+                "keyboardType": null,
+                "fieldType": "SelectionInputField",
+                "items": ["NY", "NJ", "CO"],
+                "shortcuts": [
+                    "@gmail.com,@kwi.com"
+                ],
+                "defaultText": "",
+                "maxlength": 0,
+                "isDefaultScannableField": false,
+                "defaultNumber": null,
+                "defaultQty": 0,
+                "denominationInCents": 4,
+                "defaultSelectedItem": "NY"
+            },
+            {
+                "id": "birth_cp",
+                "label": "Birthday",
+                "isEditable": true,
+                "isRequired": true,
+                "isDesired": false,
+                "isHidden": false,
+                "keyboardType": null,
+                "fieldType": "DateInputField",
+                "items": null,
+                "shortcuts": [
+                    "@gmail.com,@kwi.com"
+                ],
+                "defaultText": "dross@kwi.com",
+                "maxlength": 0,
+                "isDefaultScannableField": false,
+                "defaultNumber": null,
+                "defaultQty": 0,
+                "denominationInCents": 4,
+                "defaultSelectedItem": null
+            }
+        ]
+    },
+    "client": "fred",
+    "statusCode": 0,
+    "status": true
+}

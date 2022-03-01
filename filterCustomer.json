@@ -1,0 +1,18 @@
+{
+  "status": true,
+  "client": "kwi",
+  "tranID": 1234,
+  "statusCode": 0,
+  "result": {
+    "customers": [
+      {
+        "id": "0777000004",
+        "last": "Bentley"
+      },
+      {
+        "id": "0777000005",
+        "last": "Bent"
+      }
+    ]
+  }
+}

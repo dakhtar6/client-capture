@@ -1,0 +1,10 @@
+{
+  "status": true,
+  "client": "kwi",
+  "tranID": 1234,
+  "statusCode": 0,
+  "result": {
+    "id": "0777000004",
+    "message": "Customer created successfully"
+  }
+}

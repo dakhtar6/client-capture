@@ -1,0 +1,16 @@
+{
+	"tranID": 188386,
+	"result": {
+		"singleusecoupon": {
+			"description": "TEST_NON_PROD_Multiplier_2",
+			"id": "PAN|0000000263",
+			"active": "Y",
+			"customer": "1011000163",
+			"masterCouponId": "5555111190",
+			"expiryDate": "2023-01-12 16:25:01"
+		}
+	},
+	"client": "fred",
+	"statusCode": 0,
+	"status": true
+}

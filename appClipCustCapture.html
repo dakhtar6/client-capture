@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>Customer Capture</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/fontawesome.min.css" integrity="sha512-8Vtie9oRR62i7vkmVUISvuwOeipGv8Jd+Sur/ORKDD5JiLgTGeBSkI3ISOhc730VGvA5VVQPwKIKlmi+zMZ71w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+  <link rel='stylesheet' type='text/css' media='screen' href='appClipCustCapture.css'>
+  <script src="https://kit.fontawesome.com/8dd3149534.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <main>
+    <i class="company-logo"></i>
+    <h1 class="page-title">Sign Up</h1>
+    <h4 class="error-message color-red">&nbsp;</h4>
+    <section id="controls-container">
+      <h4 class="controls-disclaimer">Please fill out the required information and tap submit</h4>
+      <form id="customer-capture-form" class="controls" action="https://flintstones_mpos.kligerweiss.net/kwi/api/customer/addCustomer" method="post">
+        <fieldset></fieldset>
+      </form>
+    </section>
+    <section id="coupon-details" class="display-none">
+      <ul>
+        <li class="grey-border-bottom"><strong id="coupon-title"></strong></li>
+        <li class="grey-border-bottom">Expires: <span id="coupon-expiration"></span></li>
+        <li class="grey-border-bottom">Customer: <span id="customer-number"></span></li>
+        <li class="grey-border-bottom">Coupon: <span id="coupon-number"></span></li>
+      </ul>
+      <div id="qrcode-container"></div>
+    </section>
+  </main>
+  <footer>
+    <div id="submit-button-container">
+      <button id="submit-customer-capture-button" class="cta-button" type="button">
+        <div class="spinner-container display-none"></div>
+        <p class="button-title">Submit</p></button>
+    </div>
+    <div id="share-qr-container" class="display-none">
+      <button class="cta-button" type="button"><i id="share-logo" class="fa-solid fa-arrow-up-from-bracket"></i>Share QR Code</button>
+    </div>
+    <div id="apple-wallet-container" class="display-none">
+      <button id="apple-wallet-button" class="cta-button flex-container-row" type="button"><img id="apple-wallet-logo" src="wallet.jpg"/>Add to Apple Wallet</button>
+    </div>
+  </footer>
+  <!-- <div id="loading-screen" class="display-none">
+    <div class="dim-backscreen"></div>
+    <div id="spinner-container"></div>
+  </div>   -->
+  <div class="backscreen display-none"></div>
+  <script src='qrcode.min.js'></script>    
+  <script src='appClipCustCapture.js'></script>    
+</body>
+</html>
