@@ -461,8 +461,8 @@ document.querySelector('#share-qr-container button').addEventListener('click', s
 document.getElementById('apple-wallet-button').addEventListener('click', () => {
   //clear error message
   document.querySelector('.error-message').textContent = "";
-  
-  fetch(`https://us-central1-cloud-9-pos.cloudfunctions.net/createPass?client=demo5&customer=${document.getElementById('customer-number').textContent}`, {
+  //client, customer, singleusecouponidentifier (param is coupon), description, expiration
+  fetch(`https://us-central1-cloud-9-pos.cloudfunctions.net/createPass?client=${client}&customer=${couponData.customer}&coupon=${couponData.id}&description=${couponData.description}&expiration=${new Date().toISOString}`, {
     method: 'GET',
     mode: 'cors',  
     cache: 'no-cache', 

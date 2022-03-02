@@ -2,7 +2,13 @@
 //METHODS//
 //////////
 
-//fontawesome, use github to host and then test apple wallet - test
+//fontawesome, use github to host and then test apple wallet
+
+//function rptpars(xhr, status, args){
+//	console.log("xhr",xhr);
+//	console.log("args",args.result);
+//	console.log("status", status)
+//}
 
 function submitReportOnEvent(data) {
   console.log("data",data);
@@ -48,7 +54,6 @@ const hideSpinner = () => {
 const createInput = (control, isEmailIncluded) => {
   //create input container and additional elements 
   let container = document.createElement('div'); 
-  container.className = "flex-container-row align-items-center justify-content-space-between grey-border-bottom";
   let label = document.createElement('label'); 
   label.textContent = control.label
   label.setAttribute('for', control.id); 
@@ -183,7 +188,7 @@ const createInput = (control, isEmailIncluded) => {
   container.appendChild(label);
   container.appendChild(input);
   // container.appendChild(clearInputButton); 
-  document.querySelector('.controls fieldset').appendChild(container); 
+  document.querySelector('.controls > div').appendChild(container); 
 }
 
 const collectCustomerDetails = () => {
@@ -208,42 +213,17 @@ const collectCustomerDetails = () => {
 const addCustomer = () => {
   //clear error message
   document.querySelector('.error-message').textContent = "";
-  console.log("add customer data",data);
+  console.log("ADD CUSTOMER");
+  console.log("xhr",xhr);
+  console.log("args",args.result);
+  console.log("status", status);
   if(data.status == "begin") {
     showSpinner(); 
   }
   else if(data.status == "success") {
-    // data = JSON.parse(data.responseText);
-    // if (data.hasOwnProperty('result')) {
-    //   if(data.result.message === "Customer created successfully") {
-    //     //make call to get coupon
-    //     let getCouponBody = {
-    //       masterCoupon: masterCoupon,
-    //       customer: data.result.id,
-    //       creator: 'app clip',
-    //       date: new Date().toISOString().split('T')[0],
-    //       store: storeId
-    //     }
-    //     document.getElementById('createSingleUseCoupon').value = JSON.stringify(getCouponBody)
-    //     document.getElementById('createSingleUseCoupon').click(); 
-    //     // getCoupon(data); 
-    //   }
-    //   else {
-    //     document.querySelector('.error-message').textContent = `Please try again! Customer not created.`; 
-    //     hideSpinner(); 
-    //   }
-    // }
-  }
-  else if (data.status == "error") {
-    document.querySelector('.error-message').textContent = `Please try again! ${error}`; 
-    console.error(error);
-    hideSpinner();
-  }
-  else if(data.status == "complete") {
     data = JSON.parse(data.responseText);
-    //get coupon
     if (data.hasOwnProperty('result')) {
-      if(data.result.message === "Customer created successfully") {
+      if(data.result.statusCode === 0) {
         //make call to get coupon
         let getCouponBody = {
           masterCoupon: masterCoupon,
@@ -252,51 +232,71 @@ const addCustomer = () => {
           date: new Date().toISOString().split('T')[0],
           store: storeId
         }
-        document.getElementById('createSingleUseCoupon').value = JSON.stringify(getCouponBody)
+        document.getElementById('webClipQueryParam').value = JSON.stringify(getCouponBody)
         document.getElementById('createSingleUseCoupon').click(); 
-        // getCoupon(data); 
       }
       else {
         document.querySelector('.error-message').textContent = `Please try again! Customer not created.`; 
         hideSpinner(); 
       }
     }
-  } 
-}
-
-const filterCustomer = () => {
-  console.log("filter customer data",data);
-  if(data.status == "begin") {
-    showSpinner(); 
   }
-  else if(data.status == "success") {
-    data = JSON.parse(data.responseText);
-    if (data.result.hasOwnProperty("customers") && data.result.customers.length > 1) {
-      document.querySelector('.error-message').textContent = `An account with this email address already exists. Please try a different email address.`; 
-      hideSpinner(); 
-    }
-    else {
-      let details = collectCustomerDetails(); 
-      document.getElementById('addCustomer').value = JSON.stringify(details)
-      document.getElementById('addCustomer').click(); 
-      // addCustomer(); 
-    }
-  }
-  else if (data.status == "error") {
+  else {
     document.querySelector('.error-message').textContent = `Please try again! ${error}`; 
     console.error(error);
     hideSpinner();
   }
-  else if(data.status == "complete") {
-  } 
 }
 
-const shareQRCode = () => {
+const filterCustomer = (xhr, status, args) => {
+  console.log("FILTER CUSTOMER");
+  console.log("xhr",xhr);
+  console.log("args",args.result);
+  console.log("status", status);
+  if(status == "begin") {
+    showSpinner(); 
+  }
+  else if(status == "success") {
+    let data = JSON.parse(args.result); 
+    // data = JSON.parse(data.responseText);
+    //customer already exists
+    if (data.result.hasOwnProperty("customers") && data.result.customers.length > 1) {
+      document.querySelector('.error-message').textContent = `An account with this email address already exists. Please try a different email address.`; 
+      hideSpinner(); 
+    }
+    //new customer so they are added 
+    else {
+      let details = collectCustomerDetails(); 
+      document.getElementById('addCustomer').value = JSON.stringify(details)
+      document.getElementById('addCustomer').click(); 
+    }
+  }
+  else {
+    document.querySelector('.error-message').textContent = `Please try again! ${xhr.statusText}`; 
+    console.error(xhr.statusText);
+    hideSpinner();
+  }
+}
+
+const shareQRCode = async () => {
+  const imageUrl = document.querySelector('#qrcode-container img').src; 
+  const blob = await(await fetch(imageUrl)).blob();
+  // await(await fetch('data:text/plain,42').blob()
+  const filesArray = [
+    new File(
+      [blob],
+      `${document.getElementById('coupon-number').value}.png`,
+      {
+        type: blob.type,
+        lastModified: new Date().getTime()
+      }
+    )
+  ];
   if (navigator.canShare && navigator.canShare({ files: filesArray })) {
     navigator.share({
       files: filesArray,
-      title: 'Pictures',
-      text: 'Our Pictures.',
+      title: document.getElementById('coupon-number').value,
+      text: document.getElementById('coupon-number').value,
     })
     .then(() => console.log('Share was successful.'))
     .catch(error => {
@@ -309,80 +309,51 @@ const shareQRCode = () => {
   }
 }
 
-const getCoupon = (customerData) => {
-  // let yourDate = new Date(); 
-  console.log("coupon data",data);
-  if(data.status == "begin") {
+const getCoupon = (customerData, xhr, status, args) => {
+  console.log("GET COUPON");
+  console.log("xhr",xhr);
+  console.log("args",args.result);
+  console.log("status", status);
+  if(status == "begin") {
     showSpinner(); 
   }
-  else if(data.status == "success") {
-    // data = JSON.parse(data.responseText);
-    // if (data.hasOwnProperty('result')) {
-    //   if (data.result.statusCode === 0) {
-    //     // use QR code library to generate QR Code. Library documentation at https://davidshimjs.github.io/qrcodejs/
-    //     new QRCode(document.getElementById("qrcode-container"), data.result.singleusecoupon.id);
-    //     //populate details for customer coupon
-    //     document.getElementById('customer-number').textContent = customerData.id; 
-    //     document.getElementById('coupon-title').textContent = data.result.singleusecoupon.description; 
-    //     document.getElementById('coupon-expiration').textContent = data.result.singleusecoupon.expiryDate; 
-    //     document.getElementById('coupon-number').textContent = data.result.singleusecoupon.id; 
-    //     document.querySelector('.page-title').textContent = "Sign Up Complete";
-    //     document.getElementById('controls-container').classList.add('display-none');
-    //     document.getElementById('coupon-details').classList.remove('display-none');
-    //     document.getElementById('share-qr-container').classList.remove('display-none');
-    //     //if IOS also show Apple Wallet button and appropriate share icon
-    //     if (operatingSystem === "ios") {
-    //       document.getElementById('apple-wallet-container').classList.remove('display-none'); 
-    //       document.getElementById('QR-logo').className = "fa-solid fa-arrow-up-from-bracket"; 
-    //     }
-    //     else if (operatingSystem === "android") {
-    //       document.getElementById('QR-logo').className = "fa-solid fa-share-nodes"; 
-    //     }
-    //   }
-    //   else {
-    //     document.querySelector('.error-message').textContent = data.result.message; 
-    //   }
-    //   hideSpinner(); 
-    // }
-  }
-  else if (data.status == "error") {
-    document.querySelector('.error-message').textContent = `Please try again! ${error}`; 
-    console.error(error);
-    // hideSpinner();
-  }
-  else if(data.status == "complete") {
+  else if(status == "success") {
     data = JSON.parse(data.responseText);
     if (data.hasOwnProperty('result')) {
       //reveal coupon
-      if (data.result.statusCode === 0) {
+      if (data.statusCode === 0) {
+    	//store reference to coupon data
+    	couponData = data.result.singleusecoupon;
         // use QR code library to generate QR Code. Library documentation at https://davidshimjs.github.io/qrcodejs/
         new QRCode(document.getElementById("qrcode-container"), data.result.singleusecoupon.id);
         //populate details for customer coupon
-        document.getElementById('customer-number').textContent = customerData.id; 
+        document.getElementById('customer-number').textContent = customerData.result.id; 
         document.getElementById('coupon-title').textContent = data.result.singleusecoupon.description; 
         document.getElementById('coupon-expiration').textContent = data.result.singleusecoupon.expiryDate; 
         document.getElementById('coupon-number').textContent = data.result.singleusecoupon.id; 
         document.querySelector('.page-title').textContent = "Sign Up Complete";
         document.getElementById('controls-container').classList.add('display-none');
+        document.getElementById('submit-button-container').classList.add('display-none');
         document.getElementById('coupon-details').classList.remove('display-none');
         document.getElementById('share-qr-container').classList.remove('display-none');
         //if IOS also show Apple Wallet button and appropriate share icon
         if (operatingSystem === "ios") {
-          document.getElementById('apple-wallet-container').classList.remove('display-none'); 
-          document.getElementById('QR-logo').className = "fa-solid fa-arrow-up-from-bracket"; 
-        }
-        else if (operatingSystem === "android") {
-          document.getElementById('QR-logo').className = "fa-solid fa-share-nodes"; 
+          document.getElementById('apple-wallet-container').classList.remove('display-none');
+          document.getElementById('share-qr-container').style.padding = "0 25px"; 
+          document.querySelector('main').style.setProperty('height', 'calc(75% - 50px)'); 
         }
       }
       //show error message
       else {
         document.querySelector('.error-message').textContent = data.result.message; 
       }
-      // hideSpinner(); 
     }
     hideSpinner(); 
-  } 
+  }
+  else {
+    document.querySelector('.error-message').textContent = `Please try again! ${xhr.statusText}`; 
+    console.error(xhr.statusText);
+  }
 }
 
 ////////////////////
@@ -401,9 +372,10 @@ document.getElementById('submit-customer-capture-button').addEventListener('clic
     document.querySelector('input[name="email_cp"]').classList.add('border-red'); 
   }
   else {
-    document.getElementById('filterCustomer').value = JSON.stringify(details); 
+    delete details.missing;
+    delete details.isEmailValid; 
+    document.getElementById('filterCustJson').value = JSON.stringify(details); 
     document.getElementById('filterCustomer').click(); 
-    // filterCustomer(details);
   }
 });  
 
@@ -413,12 +385,19 @@ document.getElementById('customer-capture-form').addEventListener('click', event
   }
 }); 
 
-document.querySelector('#share-qr-container button').addEventListener('click', shareQRCode); 
+document.querySelector('#share-qr-container').addEventListener('click', shareQRCode); 
 
 document.getElementById('apple-wallet-button').addEventListener('click', () => {
   //clear error message
   document.querySelector('.error-message').textContent = "";
-  fetch('https://us-central1-cloud-9-pos.cloudfunctions.net/createPass?client=demo5&customer=123456789')
+  fetch(`https://us-central1-cloud-9-pos.cloudfunctions.net/createPass?client=${client}&customer=${couponData.customer}&coupon=${couponData.id}&description=${couponData.description}&expiration=${new Date(document.getElementById('coupon-expiration').textContent).toISOString}`, {
+    method: 'GET',
+    mode: 'cors',  
+    cache: 'no-cache', 
+    credentials: 'include',
+    connection: 'keep-alive',
+    accept: 'application/json',
+  })
   .then(response => {
     return response.json();
   })
@@ -444,124 +423,79 @@ const getMobileOperatingSystem = () => {
 }
 const operatingSystem = getMobileOperatingSystem(); 
 let fieldData;
+let couponData; 
+const client = document.getElementById('clientName').value; 
 
 window.addEventListener('load', () => {
-  let errorMessageContainer = document.createElement('h4');
   //get page url
   let pageUrl = window.location.href; 
   let urlParams = new URLSearchParams(pageUrl);
   let storeId = urlParams.get('storeId');
   let masterCoupon = urlParams.get('parent');
   //get rptpars info
-  let rptparsCallBody = {storeId: null}; 
+  let rptparsCallBody = {storeId: ""}; 
   if (storeId !== null) {
     rptparsCallBody.storeId = storeId; 
   }
-  document.getElementById('rptpars').value = JSON.stringify(rptparsCallBody);
+  // $('#rptpars')[0].click();
+  document.getElementById('webClipQueryParam').value = JSON.stringify(rptparsCallBody);
   document.getElementById('rptpars').click();
 });
 
-const rptparsCall = (data) => {
-  console.log("rptpars data",data);
-  if(data.status == "begin") {
+const rptpars = (xhr, status, args) => {
+  console.log("xhr",xhr);
+  console.log("args",args.result);
+  console.log("status", status);
+  let errorMessageContainer = document.createElement('h4');
+  errorMessageContainer.className = "color-red";
+  
+  if(status == "begin") {
     showSpinner(); 
   }
-  else if(data.status == "success") {
-    // data = JSON.parse(data.responseText);
-    // if (data.hasOwnProperty('result')) {
-    //   fieldData = data.result.inputField; 
-    //   console.log("FD", fieldData); 
-    //   if(fieldData.length > 0) {
-    //     //create form controls for customer capture
-    //     let isEmailIncluded = false; 
-    //     for (let input of fieldData){
-    //       createInput(input, isEmailIncluded);
-    //     }
-    //     //if email input wasn't included in JSON response add one
-    //     if (!isEmailIncluded) {
-    //       let container = document.createElement('div');
-    //       container.className = "flex-container-row align-items-center justify-content-space-between grey-border-bottom"; 
-    //       let label = document.createElement('label'); 
-    //       label.textContent = control.label
-    //       label.setAttribute('for', control.id); 
-    //       let clearInputButton = document.createElement('button');
-    //       clearInputButton.type = "button"; 
-    //       clearInputButton.className = "clear-input-button"; 
-    //       clearInputButton.textContent = "X";   
-    //       let input = document.createElement('input'); 
-    //       input.className = "control";
-    //       input.type = "email";
-    //       input.placeholder = "Email";
-    //       input.name = "email_cp";
-    //       input.required = "true"; 
-    //       container.appendChild(input);
-    //       container.appendChild(clearInputButton);
-    //       document.querySelector('.controls fieldset').appendChild(container); 
-    //     }
-    //     document.querySelector('main').classList.remove('display-none'); 
-    //   }
-    //   //no results returned
-    //   else {
-    //     errorMessageContainer.textContent = "No results returned!"; 
-    //     document.querySelector('body').appendChild(errorMessageContainer); 
-    //   }
-    //   hideSpinner();    
-    // }
+  else if(status == "success") {
+     if (args.hasOwnProperty('result')) {
+       fieldData = JSON.parse(args.result).result.inputField; 
+       console.log("FD", fieldData); 
+       if(fieldData.length > 0) {
+         //create form controls for customer capture
+    	 let isEmailIncluded = {isEmailIncluded: false}; 
+         for (let input of fieldData){
+           createInput(input, isEmailIncluded);
+         }
+         //if email input wasn't included in JSON response add one
+         if (!isEmailIncluded.isEmailIncluded) {
+           let container = document.createElement('div');
+           let label = document.createElement('label'); 
+           label.textContent = control.label
+           label.setAttribute('for', control.id); 
+           let clearInputButton = document.createElement('button');
+           clearInputButton.type = "button"; 
+           clearInputButton.className = "clear-input-button"; 
+           clearInputButton.textContent = "X";   
+           let input = document.createElement('input'); 
+           input.className = "control";
+           input.type = "email";
+           input.placeholder = "Email";
+           input.name = "email_cp";
+           input.required = "true"; 
+           container.appendChild(input);
+           container.appendChild(clearInputButton);
+           document.querySelector('.controls > div').appendChild(container); 
+         }
+         document.querySelector('main').classList.remove('display-none'); 
+       }
+       //no results returned
+       else {
+         errorMessageContainer.textContent = "No results returned!"; 
+         document.querySelector('main').prepend(errorMessageContainer); 
+       }
+       hideSpinner();    
+     }
   }
-  else if (data.status == "error") {
-    errorMessageContainer.textContent = `Error! ${error}`; 
-    document.querySelector('body').appendChild(errorMessageContainer); 
+  else {
+    errorMessageContainer.textContent = `Error! ${xhr.statusText}`; 
+    document.querySelector('main').prepend(errorMessageContainer); 
     console.error(error);
     hideSpinner();
   }
-  else if(data.status == "complete") {
-    data = JSON.parse(data.responseText);
-    if (data.hasOwnProperty('result')) {
-      fieldData = data.result.inputField; 
-      console.log("FD", fieldData); 
-      if(fieldData.length > 0) {
-        //create form controls for customer capture
-        let isEmailIncluded = {isEmailIncluded: false}; 
-        for (let input of fieldData){
-          createInput(input, isEmailIncluded);
-        }
-        //if email input wasn't included in JSON response add one
-        if (!isEmailIncluded.isEmailIncluded) {
-          let container = document.createElement('div');
-          container.className = "flex-container-row align-items-center justify-content-space-between grey-border-bottom"; 
-          let label = document.createElement('label'); 
-          label.textContent = "Email"
-          label.setAttribute('for', 'email_cp'); 
-          let clearInputButton = document.createElement('button');
-          clearInputButton.type = "button"; 
-          clearInputButton.className = "clear-input-button"; 
-          clearInputButton.textContent = "X";   
-          let input = document.createElement('input'); 
-          input.className = "control";
-          input.type = "email";
-          input.placeholder = "Email";
-          input.name = "email_cp";
-          input.required = "true"; 
-          container.appendChild(input);
-          container.appendChild(clearInputButton);
-          document.querySelector('.controls fieldset').appendChild(container); 
-        }
-        document.querySelector('main').classList.remove('display-none'); 
-      }
-      //no results returned
-      else {
-        errorMessageContainer.textContent = "No results returned!"; 
-        document.querySelector('body').appendChild(errorMessageContainer); 
-      }
-      hideSpinner();    
-    }
-  } 
 }
-  //$('#filterCustJson').val(JSON.stringify(jsonVal));
-  //console.log("json val",$('#filterCustJson').val());
-  //$('#filterCustomer')[0].click();
-  
-  //$('#addCustJson').val(JSON.stringify(jsonVal));
-  //console.log("json val",$('#addCustJson').val());
-  //$('#addCustomer')[0].click();
-  //$('#createSingleUseCoupon')[0].click();
