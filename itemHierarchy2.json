@@ -1,0 +1,66 @@
+{
+  "tranID": 230081,
+  "result": {
+      "items": [
+          {
+              "id": "3",
+              "descr": "DESIGNER & SPECIALS",
+              "picture": "http://kwidev.kligerweiss.net/kwi_demo/genericd/images/articles/candy1.png",
+              "cnt": "1"
+          },
+          {
+              "id": "3",
+              "descr": "DAVID NADRI",
+              "picture": "http://www.kwi.com/wp-content/uploads/bfi_thumb/S…ot-pa7o0bp34n6evyve252bofg7batv5qlaw2s41oruzk.jpg",
+              "cnt": "21"
+          },
+          {
+              "id": "3",
+              "descr": "3",
+              "picture": "http://www.ronlynn.com/images/jvar/F1404R1.jpg",
+              "cnt": "9679"
+          },
+        {
+            "id": "3",
+            "descr": "JV STAR USA",
+            "picture": "http://i1.adis.ws/i/johnvarvatos/K4469V3B-BPX24B-001-A.jpg",
+            "cnt": "8496"
+        },
+        {
+          "id": "3",
+          "descr": "JV STAR USA",
+          "picture": "http://i1.adis.ws/i/johnvarvatos/K4469V3B-BPX24B-001-A.jpg",
+          "cnt": "8496"
+        },
+        {
+          "id": "3",
+          "descr": "JV STAR USA",
+          "picture": "http://i1.adis.ws/i/johnvarvatos/K4469V3B-BPX24B-001-A.jpg",
+          "cnt": "8496"
+        },
+        {
+            "id": "3",
+            "descr": "MEASURE TO ORDER",
+            "picture": "",
+            "cnt": "3"
+        },
+        {
+            "id": "3",
+            "descr": "NON-BRANDED",
+            "picture": "",
+            "cnt": "9536"
+        },
+        {
+            "id": "3",
+            "descr": "SMU",
+            "picture": "",
+            "cnt": "731"
+        }
+      ],
+      "type": "collect",
+      "totalCount": "17321"
+  },
+  "client": "fred",
+  "statusCode": 0,
+  "status": true
+}

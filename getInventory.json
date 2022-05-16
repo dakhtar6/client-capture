@@ -1,0 +1,24 @@
+{
+    "tranID": 298792,
+    "result": {
+        "inventory": {
+            "stores": [
+                {
+                    "store": {
+                        "511001": {
+                            "articles": [
+                                {
+                                    "onhand": 7,
+                                    "id": "1111111111"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "client": "fred",
+    "statusCode": 0,
+    "status": true
+}

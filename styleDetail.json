@@ -1,0 +1,48 @@
+{
+    "tranID": 230075,
+    "result": {
+        "venitem": "MOCKINGBIRD",
+        "article": "1111111111",
+        "descr": "Mockingbird Single Stroller",
+        "color_c": "1",
+        "colorName": "BLACK",
+        "size1": "14.5R",
+        "colr": "BLACK",
+        "season": "X88",
+        "itemHierarchy": [
+            {
+                "color_c": {
+                    "id": "1",
+                    "descr": "BLACK"
+                },
+                "size1": {
+                    "id": "14.5R",
+                    "descr": "14.5R"
+                },
+                "colr": {
+                    "id": "BLACK",
+                    "descr": "BLACK"
+                },
+                "article": "1111111111"
+            },
+            {
+                "color_c": {
+                    "id": "14",
+                    "descr": "CHARCOAL HTR"
+                },
+                "size1": {
+                    "id": "18.5R",
+                    "descr": "18.5R"
+                },
+                "colr": {
+                    "id": "GREY",
+                    "descr": "GREY"
+                },
+                "article": "1111111112"
+            }
+        ]
+    },
+    "client": "fred",
+    "statusCode": 0,
+    "status": true
+}

@@ -4,8 +4,8 @@
 
 const pageUrl = window.location.href; 
 const urlParams = new URLSearchParams(pageUrl);
-const storeId = urlParams.get('storeId');
- const masterCoupon = urlParams.get('parent');
+const store = urlParams.get('store');
+const masterCoupon = urlParams.get('parent');
 //const masterCoupon = 5555111190;
 let couponData; 
 let customerData; 
@@ -19,10 +19,12 @@ const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 if (/android/i.test(userAgent)) {
   operatingSystem = "android";
 }
-else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+else if (/iPhone|iPod/.test(userAgent) && !window.MSStream) {
   operatingSystem = "ios";
 }
-	
+else if (/iPad/.test(userAgent) && !window.MSStream) {
+  operatingSystem = "ipad";
+}	
 
 ////////////
 //METHODS//
@@ -31,7 +33,7 @@ else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
 const validateEmail = (email) => {
   let re = /\S+@\S+\.\S+/;
   return re.test(email);
-}
+};
 const showSpinner = () => {
   let spinner = document.createElement('div');
   spinner.className = "spinner";
@@ -40,7 +42,7 @@ const showSpinner = () => {
   document.querySelector('.spinner-container').classList.remove('display-none'); 
   document.querySelector('.button-title').classList.add('display-none');
   document.getElementById('submit-customer-capture-button').classList.add('loading');
-}
+};
 
 const hideSpinner = () => {
   if (document.querySelector('.spinner')) {
@@ -50,26 +52,26 @@ const hideSpinner = () => {
   document.querySelector('.button-title').classList.remove('display-none');
   document.getElementById('submit-customer-capture-button').classList.remove('loading');
   document.getElementById('submit-customer-capture-button').classList.remove('loading');
-}
+}; 
 
 const collectCustomerDetails = () => {
   let inputs = document.querySelectorAll('.controls input');
   let details = {missing:[], isEmailValid:null};
   for (let input of inputs) {
-    details[input.id] = input.value;
+    details[input.name] = input.value;
     //remove any previous red border on an input
     input.classList.remove('border-red');
     //if any input is required and is missing a value higlight it
-    if (input.hasAttribute("required") & input.value.trim() === "") {
+    if (input.hasAttribute("required") && input.value.trim() === "") {
       input.classList.add('border-red');
       details.missing.push(input); 
     } 
-    if (input.name === "email_cp") {
+    if (input.name === "email") {
       details.isEmailValid = validateEmail(input.value); 
     }
   } 
   return details; 
-}
+};
 
 const addCustomerCall = (xhr, status, args) => {
   //clear error message
@@ -88,9 +90,8 @@ const addCustomerCall = (xhr, status, args) => {
           customerNumber: customerData.result.id,
           creator: 'app clip',
           // date: new Date().toISOString(), //todo - syju hasn't gotten back to me about the format
-           store: storeId
-//          store: 511001
-        }
+           store: store
+        }; 
         document.getElementById('webClipQueryParam').value = JSON.stringify(getCouponBody); 
         document.getElementById('createSingleUseCoupon').click(); 
       }
@@ -105,7 +106,7 @@ const addCustomerCall = (xhr, status, args) => {
     console.error(xhr.statusText);
     hideSpinner();
   }
-}
+};
 
 const filterCustomerCall = (xhr, status, args) => {
   console.log("************** FILTER CUSTOMER **************");
@@ -115,7 +116,7 @@ const filterCustomerCall = (xhr, status, args) => {
   if(status == "success") {
     let data = args.result.result;
     //customer already exists
-    if (data.hasOwnProperty("entity") && data.entity.length > 1) {
+    if (data.hasOwnProperty("entity") && data.entity.length >= 1) {
       document.querySelector('.error-message').textContent = `An account with this email address already exists. Please try a different email address.`; 
       hideSpinner(); 
     }
@@ -124,6 +125,8 @@ const filterCustomerCall = (xhr, status, args) => {
       let details = collectCustomerDetails(); 
       delete details.missing;
       delete details.isEmailValid; 
+      details.home_store = store;
+      details.crm_field_20 = store; 
       document.getElementById('addCustJson').value = JSON.stringify(details);
       document.getElementById('addCustomer').click(); 
     }
@@ -133,16 +136,19 @@ const filterCustomerCall = (xhr, status, args) => {
     console.error(xhr.statusText);
     hideSpinner();
   }
-}
+};
 
 const shareQRCode = async () => {
-  const imageUrl = document.querySelector('#qrcode-container img').src; 
+  let imageUrl = document.querySelector('#qrcode-container img').src;
+  //qrcode library that we use renders a canvas with the qrcode for android 2.1 or greater so we must grab the uri from the canvas
+  if (operatingSystem === "android") {
+	imageUrl = document.querySelector('canvas').toDataURL();
+  }
   const blob = await(await fetch(imageUrl)).blob();
-  // await(await fetch('data:text/plain,42').blob()
   const filesArray = [
     new File(
       [blob],
-      `${document.getElementById('coupon-number').value}.png`,
+      `${client.replace(/[^\w ]/g, '')}-coupon-${couponData.id.replace(/[^\w ]/g, '')}.png`,
       {
         type: blob.type,
         lastModified: new Date().getTime()
@@ -151,19 +157,37 @@ const shareQRCode = async () => {
   ];
   if (navigator.canShare && navigator.canShare({ files: filesArray })) {
     navigator.share({
-      files: filesArray,
       title: document.getElementById('coupon-number').value,
       text: document.getElementById('coupon-number').value,
+      files: filesArray
     })
     .then(() => console.log('Share was successful.'))
     .catch(error => {
       console.error(error);
-    })
+    });
   } 
   else {
     document.querySelector('.error-message').textContent = `Your system doesn't support file sharing.`;
   }
-}
+};
+
+const downloadQRCode = async () => {
+  let a = document.createElement('a');  
+  a.setAttribute('target', 'empty_frame');
+  if (operatingSystem === "android") {
+  	a.href = document.querySelector('canvas').toDataURL();
+  }
+  else {
+    const imageUrl = document.querySelector('#qrcode-container img').src; 
+    const blob = await(await fetch(imageUrl)).blob();
+    console.log('blob', blob);
+    a.href = window.URL.createObjectURL(blob);;
+  }
+  a.download = `${client.replace(/[^\w ]/g, '')}-coupon-${couponData.id.replace(/[^\w ]/g, '')}.png`;
+  document.body.appendChild(a); 
+  a.click();    
+  a.remove();
+};
 
 const getCoupon = (xhr, status, args) => {
   console.log("************** GET COUPON **************");
@@ -177,13 +201,13 @@ const getCoupon = (xhr, status, args) => {
       if (data.statusCode === 0) {
         //store reference to coupon data
         couponData = data.result.singleusecoupon;
-        // use QR code library to generate QR Code. Library documentation at https://davidshimjs.github.io/qrcodejs/
+        //use QR code library to generate QR Code. Library documentation at https://davidshimjs.github.io/qrcodejs/
         let qrcode = new QRCode(document.getElementById("qrcode-container"), {
           text: couponData.description,
           width: 150,
           height: 150,
         });
-        qrcode.makeCode(couponData.id)
+        qrcode.makeCode(JSON.stringify({customer: customerData.result.id, offer: couponData.id})); 
         //populate details for customer coupon
         document.getElementById('customer-number').textContent = customerData.result.id; 
         document.getElementById('coupon-title').textContent = couponData.description; 
@@ -193,8 +217,13 @@ const getCoupon = (xhr, status, args) => {
         document.getElementById('controls-container').classList.add('display-none');
         document.getElementById('submit-button-container').classList.add('display-none');
         document.getElementById('coupon-details').classList.remove('display-none');
-        if (navigator.canShare) {
-          document.getElementById('share-qr-container').classList.remove('display-none'); 
+        document.getElementById('share-qr-container').classList.remove('display-none');
+        if (navigator.canShare) { 
+          document.querySelector('#share-qr-container').addEventListener('click', shareQRCode);
+          document.querySelector('#share-qr-container button').innerHTML = '<i id="share-logo" class="fa-solid fa-arrow-up-from-bracket"></i>Share QR Code';
+        }
+        else {
+          document.querySelector('#share-qr-container').addEventListener('click', downloadQRCode); 
         }
         //if IOS also show Apple Wallet button and appropriate share icon
         if (operatingSystem === "ios") {
@@ -215,7 +244,7 @@ const getCoupon = (xhr, status, args) => {
     document.querySelector('.error-message').textContent = `Please try again! ${xhr.statusText}`; 
     console.error(xhr.statusText);
   }
-}
+};
 
 ////////////////////
 //EVENT LISTENERS//
@@ -230,79 +259,32 @@ document.getElementById('submit-customer-capture-button').addEventListener('clic
   }
   else if (details.isEmailValid === false) {
     document.querySelector('.error-message').textContent = "Invalid Email."; 
-    document.querySelector('input[name="email_cp"]').classList.add('border-red'); 
+    document.querySelector('input[name="email"]').classList.add('border-red'); 
   }
   else {
-    delete details.missing;
-    delete details.isEmailValid; 
-    document.getElementById('filterCustJson').value = JSON.stringify(details); 
+    document.getElementById('filterCustJson').value = JSON.stringify({email: document.querySelector('input[name="email"]').value}); 
     showSpinner(); 
     document.getElementById('filterCustomer').click(); 
   }
 });  
 
-document.getElementById('customer-capture-form').addEventListener('click', event => {
-  if (event.target.matches('.clear-input-button')) {
-    event.target.parentNode.querySelector('input').value = ""; 
-  }
-}); 
-
-document.querySelector('#share-qr-container').addEventListener('click', shareQRCode); 
-
 document.getElementById('apple-wallet-button').addEventListener('click', () => {
   //clear error message
   document.querySelector('.error-message').textContent = "";
   let date = document.getElementById('coupon-expiration').textContent;
-  fetch(`https://us-central1-cloud-9-pos.cloudfunctions.net/createPass?client=${client}&customer=${couponData.customer}&coupon=${couponData.id}&description=${couponData.description}&expiration=${`${date} 23:59:59`}`, {
-    method: 'GET',
-    mode: 'no-cors',  
-    cache: 'no-cache', 
-    credentials: 'include',
-    connection: 'keep-alive',
-    accept: 'application/json',
-  })
-  .then(response => response.blob())
-  .then(blob => {
-    let url = window.URL.createObjectURL(blob);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = `${document.getElementById('coupon-number').textContent}.pkpass`;
-    // a.download = `coupon.pkpass`;
-    document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
-    a.click();    
-    a.remove();         
-  })
-  // .then (data => {
-//   function onOpened() {
-//     console.log(`Opened download item`);
-//   }
-  
-//   function onError(error) {
-//     console.log(`Error opening item: ${error}`);
-//   }
-  
-//   function openDownload(downloadItems) {
-//       if (downloadItems.length > 0) {
-//         var opening = browser.downloads.open(downloadItems[0].id);
-//         opening.then(onOpened, onError);
-//       }
-//     }
-  
-//   var searching = browser.downloads.search({
-//     limit: 1,
-//     orderBy: ["-startTime"]
-//   });
-  
-//   searching.then(openDownload, onError);
-// })
-  .catch(error => {
-    document.querySelector('.error-message').textContent = `${error}`; 
-    console.error(error);
-  })
+  let a = document.createElement('a');
+  a.setAttribute('target', 'empty_frame');
+  a.href = `https://us-central1-cloud-9-pos.cloudfunctions.net/createPass?client=${encodeURIComponent(client)}&customer=${encodeURIComponent(couponData.customer)}&description=${encodeURIComponent(couponData.description)}&expiration=${`${date} 23:59:59`}`;
+  // a.download = `${document.getElementById('coupon-number').textContent}.pkpass`;
+  a.setAttribute('download', '');
+  document.body.appendChild(a);
+  a.click();    
+  a.remove();
+  document.querySelector('.error-message').textContent = `Apple Wallet file downloaded.`;    
 });
 
 //to handle keyboard shrinking the height of the viewable space on android
-if (operatingSystem !== "ios") {
+if (operatingSystem === "android") {
   window.addEventListener('resize', () => {
     if(window.innerHeight < initialHeight && window.innerWidth < 800){
     // if(window.innerHeight < initialHeight){
@@ -324,12 +306,8 @@ const createInput = (control, isEmailIncluded) => {
   //create input container and additional elements 
   let container = document.createElement('div'); 
   let label = document.createElement('label'); 
-  label.textContent = control.label
+  label.textContent = control.label;
   label.setAttribute('for', control.id); 
-  let clearInputButton = document.createElement('button');
-  clearInputButton.type = "button"; 
-  clearInputButton.className = "clear-input-button"; 
-  clearInputButton.textContent = "X"; 
   //create specific input fieldType
   let input = document.createElement('input'); 
   input.className = "control";
@@ -351,7 +329,6 @@ const createInput = (control, isEmailIncluded) => {
     input.value = control.defaultQty; 
   }
   else if (control.fieldType === "SelectionInputField") {
-    clearInputButton.classList.add('display-none'); 
     if (Array.isArray(control.items) && control.items.length > 0) {
       // input = document.createElement('datalist'); 
       input = document.createElement('select');
@@ -373,11 +350,10 @@ const createInput = (control, isEmailIncluded) => {
   else if (control.fieldType === "DateInputField") {
     input.type = "date";
     input.value = control.defaultText; 
-    clearInputButton.classList.add('display-none'); 
   }
   input.id = control.id;
   input.placeholder = control.label; 
- 
+  //assign input.name for use in assembling the body of the customer capture API call
   if (control.id === "num_cp") {
     input.name = "id"; 
   }
@@ -438,7 +414,7 @@ const createInput = (control, isEmailIncluded) => {
     input.name = "address_opt_in"; 
   }
   else if (control.id === "busnam_cp") {
-    business_name = "first"; 
+    input.name = "business_name"; 
   }
   else if (control.id === "cmts_cp") {
     input.name = "crm_notes"; 
@@ -458,14 +434,14 @@ const createInput = (control, isEmailIncluded) => {
   }
 
   container.appendChild(input);
-  // container.appendChild(clearInputButton); 
   document.querySelector('.controls > div').appendChild(container); 
-}
+}; 
 
 window.addEventListener('load', () => {
+  checkPermission(); 
   //get rptpars info
-  if (storeId !== null) {
-    document.getElementById('webClipQueryParam').value = JSON.stringify({storeId: storeId});
+  if (store !== null) {
+    document.getElementById('webClipQueryParam').value = JSON.stringify({storeId: store});
   }
   showSpinner();
   document.getElementById('rptpars').click();
@@ -493,20 +469,16 @@ const rptparsCall = (xhr, status, args) => {
          if (!isEmailIncluded.isEmailIncluded) {
            let container = document.createElement('div');
            let label = document.createElement('label'); 
-           label.textContent = control.label
-           label.setAttribute('for', control.id); 
-           let clearInputButton = document.createElement('button');
-           clearInputButton.type = "button"; 
-           clearInputButton.className = "clear-input-button"; 
-           clearInputButton.textContent = "X";   
+           label.textContent = "Email";
+           label.setAttribute('for', 'email_cp'); 
            let input = document.createElement('input'); 
            input.className = "control";
+           input.id = "email_cp";
            input.type = "email";
            input.placeholder = "Email";
-           input.name = "email_cp";
+           input.name = "email";
            input.required = "true"; 
            container.appendChild(input);
-           container.appendChild(clearInputButton);
            document.querySelector('.controls > div').appendChild(container); 
          }
          document.querySelector('main').classList.remove('display-none'); 
@@ -522,7 +494,7 @@ const rptparsCall = (xhr, status, args) => {
   else {
     errorMessageContainer.textContent = `Error! ${xhr.statusText}`; 
     document.querySelector('main').prepend(errorMessageContainer); 
-    console.error(error);
+    console.error(xhr.statusText);
     hideSpinner();
   }
-}
+}; 

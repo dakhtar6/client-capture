@@ -1,0 +1,54 @@
+{
+    "tranID": 230081,
+    "result": {
+        "items": [
+            {
+                "id": "01",
+                "descr": "DESIGNER & SPECIALS",
+                "picture": "http://kwidev.kligerweiss.net/kwi_demo/genericd/images/articles/candy1.png",
+                "cnt": "1"
+            },
+            {
+                "id": "17",
+                "descr": "JOHN ALLAN",
+                "picture": "http://www.ronlynn.com/images/jvar/JASHOCN.jpg",
+                "cnt": "21"
+            },
+            {
+                "id": "14",
+                "descr": "JOHN VARVATOS",
+                "picture": "http://www.ronlynn.com/images/jvar/F1404R1.jpg",
+                "cnt": "9679"
+            },
+            {
+                "id": "15",
+                "descr": "JV STAR USA",
+                "picture": "http://i1.adis.ws/i/johnvarvatos/K4469V3B-BPX24B-001-A.jpg",
+                "cnt": "8496"
+            },
+            {
+                "id": "12",
+                "descr": "MEASURE TO ORDER",
+                "picture": "",
+                "cnt": "3"
+            },
+            {
+                "id": "16",
+                "descr": "NON-BRANDED",
+                "picture": "",
+                "cnt": "9536"
+            },
+            {
+                "id": "90",
+                "descr": "SMU",
+                "picture": "",
+                "cnt": "731"
+            }
+        ],
+        "type": "collect",
+        "totalCount": "28386"
+    },
+    "client": "fred",
+    "statusCode": 0,
+    "status": true
+}

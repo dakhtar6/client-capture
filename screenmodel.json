@@ -1,0 +1,115 @@
+{
+    "tranID": 230059,
+    "result": {
+        "screenModels": [
+            {
+                "componentkey": "filters.styleBrowser.orderBy",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 1,
+                "languagedetail_key": "text.style_browser.filter.orderBy",
+                "languagedetail_text": "Sort"
+            },
+            {
+                "componentkey": "filters.styleBrowser.price",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 2,
+                "languagedetail_key": "text.style_browser.filter.price",
+                "languagedetail_text": "Price"
+            },
+            {
+                "componentkey": "filters.styleBrowser.collect",
+                "belongsto": "filters.styleBrowser",
+                "level": 1,
+                "displayorder": 3,
+                "languagedetail_key": "text.style_browser.filter.collect",
+                "languagedetail_text": "Department"
+            },
+            {
+                "componentkey": "filters.styleBrowser.type_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 1,
+                "displayorder": 4,
+                "languagedetail_key": "text.style_browser.filter.type_c",
+                "languagedetail_text": "Class"
+            },
+            {
+                "componentkey": "filters.styleBrowser.pat_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 1,
+                "displayorder": 5,
+                "languagedetail_key": "text.style_browser.filter.pat_c",
+                "languagedetail_text": "Subclass"
+            },
+            {
+                "componentkey": "filters.styleBrowser.sclass_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 6,
+                "languagedetail_key": "text.style_browser.filter.sclass_c",
+                "languagedetail_text": "Subdepartment"
+            },
+            {
+                "componentkey": "filters.styleBrowser.cl1_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 7,
+                "languagedetail_key": "text.style_browser.filter.cl1_c",
+                "languagedetail_text": "Attribute 1"
+            },
+            {
+                "componentkey": "filters.styleBrowser.cl2_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 8,
+                "languagedetail_key": "text.style_browser.filter.cl2_c",
+                "languagedetail_text": "Attribute 2"
+            },
+            {
+                "componentkey": "filters.styleBrowser.cl3_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 9,
+                "languagedetail_key": "text.style_browser.filter.cl3_c",
+                "languagedetail_text": "Attribute 3"
+            },
+            {
+                "componentkey": "filters.styleBrowser.model_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 10,
+                "languagedetail_key": "text.style_browser.filter.model_c",
+                "languagedetail_text": "Vendor"
+            },
+            {
+                "componentkey": "filters.styleBrowser.season",
+                "belongsto": "filters.styleBrowser",
+                "level": 2,
+                "displayorder": 11,
+                "languagedetail_key": "text.style_browser.filter.season",
+                "languagedetail_text": "Season"
+            },
+            {
+                "componentkey": "filters.styleBrowser.size1",
+                "belongsto": "filters.styleBrowser",
+                "level": 3,
+                "displayorder": 12,
+                "languagedetail_key": "text.style_browser.filter.size1",
+                "languagedetail_text": "Size"
+            },
+            {
+                "componentkey": "filters.styleBrowser.color_c",
+                "belongsto": "filters.styleBrowser",
+                "level": 3,
+                "displayorder": 13,
+                "languagedetail_key": "text.style_browser.filter.color_c",
+                "languagedetail_text": "Color"
+            }
+        ],
+        "count": 13
+    },
+    "client": "fred",
+    "statusCode": 0,
+    "status": true
+}

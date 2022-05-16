@@ -1,0 +1,88 @@
+<html>
+  <head>
+		<title>Browse</title>
+  	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1'></meta>
+		<meta name="apple-itunes-app" content="app-id=1613795914, app-clip-bundle-id=com.kligerweiss.KWIShop.Clip, app-clip-display=card" />
+    <link rel="stylesheet" href="browse.css"/>
+		<script src="https://kit.fontawesome.com/8dd3149534.js" crossorigin="anonymous"></script>
+	<head>
+	<body>
+		<header>
+			<div class="center-text">
+				<h4 class="store-name">Store Name</h4>
+				<div>
+					<p:graphicImage class="company-logo" cache="false" value="#{webClipController.clientLogoImg}" />
+					<h4 class="company-title"><strong>COMPANY TITLE</strong></h4>
+				</div>
+			</div>
+			<i id="scan-icon">&#128269;</i>
+			<input id="search-bar" type="text" placeholder="Search Products"></input>
+		</header>
+		<main>
+			<section id="browse-page" class="page">
+				<ul class="breadcrumbs hide"></ul>
+				<div class="flex-container-row space-between"><strong class="page-title">Browse Categories</strong><button class="see-all-button hide">See All<span class="see-all-count"></span></button></div>
+				<ul class="products"></ul>
+			</section>
+			<section id="final-products" class="page slide-out">
+				<header>
+					<div class="center-text">
+						<h4 class="store-name">Store Name</h4>
+						<div>
+							<h4 class="company-title"><strong>COMPANY TITLE</strong></h4>
+						</div>
+					</div>
+					<button class="back-button" type="button">&#8249;</button>
+				</header>
+				<div class="flex-container-row space-between"><strong class="page-title"></strong><button class="filter-button">Filter<span class="filter-count"></span></button></div>
+				<ul class="breadcrumbs"></ul>
+				<ul class="products"></ul>
+			</section>
+			<section id="search-results" class="page slide-out">
+				<header>
+					<div class="center-text">
+						<h4 class="store-name">Store Name</h4>
+						<div>
+							<h4 class="company-title"><strong>COMPANY TITLE</strong></h4>
+						</div>
+					</div>
+					<button class="back-button" type="button">&#8249;</button>
+				</header>
+				<ul class="products"></ul>
+			</section>
+			<section id="product-detail-view" class="page slide-out">
+				<header>
+					<div class="center-text">
+						<h4 class="store-name">Store Name</h4>
+						<div>
+							<h4 class="company-title"><strong>COMPANY TITLE</strong></h4>
+						</div>
+					</div>
+					<button class="back-button" type="button">&#8249;</button>
+				</header>
+				<div class="hero-header">
+					<div class="single-product-images-container"></div>
+				</div>
+				<h2 id="single-item-name"></h2>
+				<ul id="single-item-details"></ul>
+				<div id="single-item-dropdown-container"></div>
+				<button id="store-availability" type="button">Check Store Availability</button>	
+			</section>
+			<section id="map-page" class="page slide-out">
+				<div id="google-map"></div>
+				<input id="map-stores-filter" type="text"></input>
+				<ul id="map-stores"></ul>
+			</section>
+			<div id="error-message-container" class="dialog-container flex-container-row display-none">
+				<div class="dim-backscreen"></div>
+				<div id="error-message-dialog" class="dialog-display">
+					<div class="dialog-title"><p>Error</p></div>
+        		<p id="error-message-text"></p>
+						<button id="error-message-close-button" type="button">OK</button>
+				</div>
+			</div>
+		</main>
+		<ul id="filter-menu" class="display-none"></ul>
+	<body>
+	<script type='text/javascript' src='browse.js'></script>
+<html>

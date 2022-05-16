@@ -1,0 +1,58 @@
+{
+    "tranID": 230093,
+    "result": {
+        "pricing": {
+            "etran": {
+                "lineItems": [
+                    {
+                        "id": 1,
+                        "originatingId": 1,
+                        "sku": "1111111111",
+                        "qty": 1,
+                        "transactionRowId": 1,
+                        "description": "Mockingbird Single Stroller",
+                        "bulkPriceWithOverride": {
+                            "currency": "USD",
+                            "value": 345.0
+                        },
+                        "price": {
+                            "currency": "USD",
+                            "value": 345.0
+                        },
+                        "originalPrice": {
+                            "currency": "USD",
+                            "value": 350.0
+                        },
+                        "markdownPriceMod": {
+                            "currency": "USD",
+                            "value": -5.0
+                        },
+                        "priceWithOverride": {
+                            "currency": "USD",
+                            "value": 345.0
+                        },
+                        "effectivePrice": {
+                            "currency": "USD",
+                            "value": 345.0
+                        },
+                        "extendedPrice": {
+                            "currency": "USD",
+                            "value": 345.0
+                        },
+                        "priceWithOverrideWithPromos": {
+                            "currency": "USD",
+                            "value": 345.0
+                        }
+                    }
+                ],
+                "subtotal": {
+                    "currency": "USD",
+                    "value": 345.0
+                }
+            }
+        }
+    },
+    "client": "fred",
+    "statusCode": 0,
+    "status": true
+}
