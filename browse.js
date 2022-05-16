@@ -1,10 +1,10 @@
 /* 
 TODO
- - infinite scroll
- - gallery
- - blur photo
  - dropdowns
  - filters
+ - gallery
+ - infinite scroll
+ - blur photo
  - see all
 */
 
@@ -292,7 +292,7 @@ const showProductDetail = async (card) => {
       stockListItem.className = "color-green";
       stockListItem.style.marginLeft = "5px"; 
     }
-    else if (stock === 0) {
+    else {
       stockListItem.textContent = "Out of Stock!"; 
       stockListItem.className = "color-red";
     }
@@ -303,16 +303,28 @@ const showProductDetail = async (card) => {
     //dropdowns
     let dropdownsFrag = document.createDocumentFragment(); 
     for (let dropdown of hierarchiesLevelThree) {
-      let div = document.createElement('div');
-      div.className = "dropdown-container flex-container-row"; 
+      //overall container
+      let dropdownContainer = document.createElement('div');
+      dropdownContainer.className = "dropdown-container flex-container-row"; 
+      //label
       let label = document.createElement('label');
       label.textContent = dropdown.languagedetail_text; 
       label.setAttribute('for', extractName(dropdown.languagedetail_key)); 
+      //holds the dropdown, dropdown's selected choice, and arrow
+      let div = document.createElement('div');
+      div.className = "arrow-container flex-container-row"; 
+      let arrow = document.createElement('span');
+      arrow.className = "right-arrow";
+      arrow.innerHTML = "&#8250;";
+      let span = document.createElement('span');
+      span.className = "selected-choice";
+      //select 
       let select = document.createElement('select');
       select.id = extractName(dropdown.languagedetail_key);
-      div.appendChild(label); 
-      select.addEventListener('input', () => {
-        for (item of itemHierarchy) {
+      select.addEventListener('click', event => {
+        event.preventDefault(); 
+        event.stopPropagation(); 
+        for (item of data.itemHierarchy) {
           for (option in item) {
             if (option === this.id && option.id === this.value) {
 
@@ -320,41 +332,61 @@ const showProductDetail = async (card) => {
           }
         }
       })
+      //append elements
       div.appendChild(select); 
-      dropdownsFrag.appendChild(div); 
+      div.appendChild(span)
+      div.appendChild(arrow); 
+      dropdownContainer.appendChild(label); 
+      dropdownContainer.appendChild(div);
+      dropdownsFrag.appendChild(dropdownContainer); 
     }
     document.getElementById('single-item-dropdown-container').innerHTML = ""; 
     document.getElementById('single-item-dropdown-container').appendChild(dropdownsFrag); 
     //options 
     for (let item of data.itemHierarchy) {
       for (let key in item) {
-        for (dropdown of hierarchiesLevelThree) {
-          if (extractName(dropdown.languagedetail_key) === key) {
+        for (dropdownData of hierarchiesLevelThree) {
+          if (extractName(dropdownData.languagedetail_key) === key) {
+            let dropdown = document.getElementById(extractName(dropdownData.languagedetail_key)); 
             let option = document.createElement('option'); 
-            option.value = item[extractName(dropdown.languagedetail_key)].id;
-            option.textContent = item[extractName(dropdown.languagedetail_key)].descr;
+            option.value = item[extractName(dropdownData.languagedetail_key)].id;
+            option.textContent = item[extractName(dropdownData.languagedetail_key)].descr;
+            if (card.closest('.card').dataset.article === item.article) {
+              option.setAttribute('selected', 'selected'); 
+            }
+            let optionCollection = dropdown.children; 
             //only add unique options don't add duplicates
-            let optionCollection = document.getElementById(extractName(dropdown.languagedetail_key)).children; 
             if (optionCollection.length > 0) {
               let isUnique = true; 
               for (let i = 0; i < optionCollection.length; i++) {
                 if (optionCollection[i].value === option.value) {
                   isUnique = false;
                   break; 
+                } 
+                else {
+                  
                 }
               }
               if (isUnique) {
-                document.getElementById(extractName(dropdown.languagedetail_key)).appendChild(option); 
+                dropdown.appendChild(option); 
               }
-            } 
+            }
+            //the very first iteration is automatically inserted
             else {
-              document.getElementById(extractName(dropdown.languagedetail_key)).appendChild(option); 
+              dropdown.appendChild(option); 
             }
             break;
           }
         }
       }
     }
+    //assign as default
+    // let createdDropdowns = document.getElementById('product-detail-view').querySelectorAll('select');
+    // for (let i = 0; i < createdDropdowns.length; i++) {
+    //   for (let j = 0; j < createdDropdowns[i].children.length; j++) {
+    //     if
+    //   }
+    // }
     document.getElementById('product-detail-view').classList.remove('slide-out'); 
   }
   catch(error) {

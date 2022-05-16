@@ -217,7 +217,26 @@ header {
   justify-content: space-between;
 }
 .dropdown-container select {
-  width: 50%;
+  text-align: right;
+  border: 0;
+  appearance: none;
+}
+.dropdown-container select:after {
+  content: '&#8250;';
+  width: 5px;
+  margin-left: 5px;
+  color: grey;
+}
+.arrow-container {
+  align-items: center;
+}
+.right-arrow {
+  margin-left: 10px;
+  color: lightgrey;
+  font-size: 2em;
+  line-height: 0;
+  /* position: relative;
+  top: 4px; */
 }
 #single-item-details {
   margin-bottom: 20px;
