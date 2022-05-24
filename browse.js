@@ -3,7 +3,6 @@ TODO
  - dropdowns
  - filters
  - infinite scroll
- - fix image size for gallery
  - see all
 
 
@@ -138,28 +137,36 @@ window.addEventListener('load', () => {
     }
     //single item dropdown option
     if(target.matches('.single-item-dropdown-option')) {
-      if (target.classList.contains('color-grey')) {
-        
-      }
-      else {
-        const makeCalls = async () => {
-          let article = target.dataset.article; 
-          let fieldName = target.parentNode.dataset.id;
-          let productDetailData = await fetchSingleProductData(); 
-          if (productDetailData.constructor === Object) { //indicates succcessful response
+      const updateDropdown = async () => {
+        //fetch data
+        let article = target.dataset.article; 
+        let fieldName = target.parentNode.dataset.id;
+        let productDetailData = await fetchSingleProductData(); 
+        //indicates succcessful response
+        if (productDetailData.constructor === Object) { 
+          //user clicked on a disabled choice
+          if (target.classList.contains('color-grey')) {
+            //remove the greyed out choices from the selected dropdown
+            let selectedDropdown = target.parentNode; 
+            for (let i = 0; i < selectedDropdown.children.length; i++) {
+              selectedDropdown.children[i].classList.remove('color-grey'); 
+            } 
+          }
+          //user clicked on a supported choice 
+          else {
             //update carousel
             updateProductDetailCarousel(productDetailData);
             //update details
             updateSingleProductDetails(productDetailData); 
-            //update dropdowns
-            assignSingleProductDropdownOptionStatus(productDetailData, target); 
           }
-          else {
-            showErrorMessage(productDetailData);
-          }
+          //update dropdowns
+          assignSingleProductDropdownOptionStatus(productDetailData, target); 
         }
-        makeCalls(); 
+        else {
+          showErrorMessage(productDetailData);
+        }
       }
+      updateDropdown(); 
     }
   });
   //error message
@@ -421,6 +428,7 @@ const updateSingleProductDetails = (data) => {
 
 const assignSingleProductDropdownOptionStatus = (data, selectedDropdown) => {
   let selectedValue = selectedDropdown.dataset.value; 
+  let selectedTextContent = selectedDropdown.textContent; 
   let selectedID = selectedDropdown.parentNode.id;
   let allDropdowns = document.querySelectorAll('#single-item-dropdown-container .floating-dropdown-container');
   //collect supported choices - not all product combinations are available
@@ -451,20 +459,27 @@ const assignSingleProductDropdownOptionStatus = (data, selectedDropdown) => {
   for (let dropdown = 0; dropdown < allDropdowns.length; dropdown++) {
     if (allDropdowns[dropdown].id !== selectedID) {
       for (let option = 0; option < allDropdowns[dropdown].children.length; option++) {
-        if (supported[allDropdowns[dropdown].id].includes(!allDropdowns[dropdown].children[option].dataset.id)) {
-          allDropdowns[dropdown].children[option].classList.add('color-grey'); 
-        } 
-        //remove any possible previous greyed out options
-        else {
+        //remove any possible previous greyed out options for a supported choice
+        if (supported[allDropdowns[dropdown].id].includes(allDropdowns[dropdown].children[option].dataset.value)) {
           allDropdowns[dropdown].children[option].classList.remove('color-grey'); 
+        } 
+        //if not supported then grey out choice
+        else {
+          allDropdowns[dropdown].children[option].classList.add('color-grey'); 
         }
+      }
+      //make sure any currently selected dropdown choices in the other dropdowns are supported. If not then erase their selection
+      let display = allDropdowns[dropdown].closest('.dropdown-container').querySelector('.choice-display');
+      if (!supported[allDropdowns[dropdown].id].includes(display.dataset.value)) {
+        display.dataset.value = ""; 
+        display.textContent = ""; 
       }
     }
   }
   //add a checkmark to the selection
   let selectedDropdownOptions = selectedDropdown.parentNode.children; 
   for (let i = 0; i < selectedDropdownOptions.length; i++){
-    if (selectedDropdownOptions[i].id === selectedID) {
+    if (selectedDropdownOptions[i].dataset.value === selectedValue) {
       selectedDropdownOptions[i].classList.add('selected'); 
     }
     else {
@@ -472,14 +487,14 @@ const assignSingleProductDropdownOptionStatus = (data, selectedDropdown) => {
     }
   }
   //display the selection 
-  selectedDropdown.closest('.dropdown-container').querySelector('.selected-choice').textContent = selectedValue; 
-  //make sure any currently selected dropdown choices in the other dropdowns are supported. If not remove their selection
-  
+  selectedDropdown.closest('.dropdown-container').querySelector('.choice-display').dataset.value = selectedValue; 
+  selectedDropdown.closest('.dropdown-container').querySelector('.choice-display').textContent = selectedTextContent; 
   //close dropdown
   selectedDropdown.closest('.backscreen').click(); 
 }
 
 const createSingleProductDropdowns = (data, selectedArticle) => {
+  //dropdowns
   let dropdownsFrag = document.createDocumentFragment(); 
   for (let dropdown of hierarchiesLevelThree) {
     //overall container
@@ -501,7 +516,7 @@ const createSingleProductDropdowns = (data, selectedArticle) => {
     arrow.className = "right-arrow";
     arrow.innerHTML = "&#8250;";
     let span = document.createElement('span');
-    span.className = "selected-choice";
+    span.className = "choice-display";
     span.dataset.for = extractName(dropdown.languagedetail_key); 
     //dropdown - we use a <ul> instead of <select> because we need to do some customization that a <select> tag won't be able to support
     let backscreen = document.createElement('div');
@@ -532,13 +547,13 @@ const createSingleProductDropdowns = (data, selectedArticle) => {
           option.dataset.value = item[extractName(dropdownData.languagedetail_key)].id;
           option.textContent = item[extractName(dropdownData.languagedetail_key)].descr;
           option.dataset.article = item.article; 
-          //default value
+          //make the dropdown display show the selected / default choice
           if (selectedArticle === item.article) {
-            option.classList.add('selected'); 
+            document.getElementById('product-detail-view').querySelector(`span[data-for="${extractName(dropdownData.languagedetail_key)}"]`).dataset.value = option.dataset.value; 
             document.getElementById('product-detail-view').querySelector(`span[data-for="${extractName(dropdownData.languagedetail_key)}"]`).textContent = option.textContent; 
           }
-          let optionCollection = dropdown.children; 
           //only include unique options don't include duplicates
+          let optionCollection = dropdown.children; 
           if (optionCollection.length > 0) {
             let isUnique = true; 
             for (let i = 0; i < optionCollection.length; i++) {
@@ -560,6 +575,23 @@ const createSingleProductDropdowns = (data, selectedArticle) => {
       }
     }
   }
+  //highlight chosen / default option by adding a checkmark 
+  let allDropdowns = document.querySelectorAll('#single-item-dropdown-container .dropdown-container');
+  for (let dropdown = 0; dropdown < allDropdowns.length; dropdown++) {
+    let display = allDropdowns[dropdown].querySelector('.choice-display'); 
+    if (display.textContent.trim() !== "") {
+      let dropdownOptions = allDropdowns[dropdown].querySelector('.floating-dropdown-container').children;
+      for (let option = 0; option < dropdownOptions.length; option++) {
+        if (dropdownOptions[option].textContent === display.textContent) {
+          dropdownOptions[option].classList.add('selected'); 
+        }
+      } 
+    }
+  }
+  //make the remaining dropdowns' options reflect their status (greyed out or not based on the first dropdown's choice) 
+  let firstDropdownValue = document.querySelector('#single-item-dropdown-container .dropdown-container .choice-display').dataset.value; 
+  let firstDropdownDefaultChoice = document.querySelector(`#single-item-dropdown-container .dropdown-container .floating-dropdown-container li[data-value="${firstDropdownValue}"]`); 
+  assignSingleProductDropdownOptionStatus(data, firstDropdownDefaultChoice); 
 }
 
 const showProductDetailPage = async (card) => {

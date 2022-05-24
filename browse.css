@@ -230,7 +230,9 @@ header {
   transform: scale(0.8);
 }
 .gallery-wrapper {
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+  height: 100%;
 }
 .product-gallery-image, .product-gallery-video {
   width: 100%; 
@@ -268,6 +270,8 @@ header {
   color: lightgrey;
   font-size: 2em;
   line-height: 0;
+  position: relative;
+  bottom: 2px;
 }
 .floating-dropdown-container {
   position: absolute;
@@ -468,7 +472,7 @@ header {
   color: green; 
 }
 .color-grey {
-  color: grey;
+  color: lightgrey;
 }
 .strike-through {
   text-decoration: line-through;
