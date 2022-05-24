@@ -369,13 +369,6 @@ const updateProductDetailCarousel = (data, headerImgUrl) => {
     type: "carousel"
   })
   productDetailCarousel.mount();
-  const width = document.querySelector('#single-product-gallery-container .glide__slides .glide__slide').style.width.replace(/\D/g,''); 
-  const height = width / 2; 
-  console.log("W", width, "H", height); 
-  let allSlides = document.querySelectorAll('#single-product-gallery-container .glide__slides .glide__slide');
-  for (let i = 0; i < allSlides.length; i++) {
-    allSlides[i].style.height = height; 
-  }
 }
 
 const fetchSingleProductData = async () => {
@@ -481,7 +474,7 @@ const assignSingleProductDropdownOptionStatus = (data, selectedDropdown) => {
   //display the selection 
   selectedDropdown.closest('.dropdown-container').querySelector('.selected-choice').textContent = selectedValue; 
   //make sure any currently selected dropdown choices in the other dropdowns are supported. If not remove their selection
-
+  
   //close dropdown
   selectedDropdown.closest('.backscreen').click(); 
 }
