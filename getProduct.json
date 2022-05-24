@@ -1,5 +1,5 @@
 {
-    "tranID": 298774,
+    "tranID": 299365,
     "result": {
         "products": [
             {
@@ -38,7 +38,11 @@
                     },
                     {
                         "url_am": "https://cdn.shopify.com/s/files/1/0023/9691/3753/files/MB19_QA_Detail_1074x1074_1x-40q_27900_769x.jpg?v=1547155565",
-                        "type_am": ""
+                        "type_am": "I"
+                    },
+                    {
+                        "url_am": "https://www.kwi.com/wp-content/uploads/2021/06/KWI_BRoll.mp4",
+                        "type_am": "V"
                     }
                 ],
                 "upc_prefix": "1",
