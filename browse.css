@@ -3,7 +3,7 @@
 * {
   box-sizing: border-box;
 }
-html, body {
+html, body, main {
   height: 100%;
 }
 html {
@@ -77,6 +77,20 @@ header {
 .page-title {
   font-size: 1.5em;
 }
+.company-title {
+	text-transform: capitalize;
+	display: inline;
+	padding-left: 10px;
+}
+.company-logo {
+	max-height: 40px;
+	border-radius: 50px;
+    border: 1px solid lightgrey;
+}
+.logo-container {
+	justify-content: center;
+	align-items: center; 
+}
 .backscreen {
   position: fixed;
   top: 0;
@@ -105,19 +119,12 @@ header {
   cursor: pointer;
   color: #1D6BE0;
 }
-.products {
-  height: 75%;
-  overflow: auto;
-  margin-top: 10px;
-}
-.see-all-button, .filter-button, #close-image-button {
-  color: #1D6BE0;
-}
 
 /*HEADER*/
 
 .store-name {
-  color: lightgrey; 
+  color: darkgrey;
+  font-weight: 400;
 }
 .back-button {
 	font-size: 2.5rem;
@@ -134,7 +141,7 @@ header {
   border: 0;
   padding: 10px 10px 10px 40px;    
   border-radius: 10px;
-  margin-top: 15px 0; 
+  margin-top: 15px; 
 }
 #scan-icon {
   position: absolute;
@@ -144,23 +151,27 @@ header {
     left: 10px;
 }
 
-/*BROWSE*/
+/*CATEGORIES PAGE*/
 
-#browse-page {
+#categories-page {
   position: initial;
 }
-#browse-page.page {
+#categories-page.page {
   padding: 0;
 }
 
 /*CARDS*/
 
-.products-container {
-  flex-wrap: wrap;
+.cards {
+  height: 75%;
+ overflow: auto;
+ margin-top: 10px;
 }
-.card {
-  width: 125px;
-  margin: 10px;
+.cards > ul {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, 127px);
+ justify-content: space-around;
+ gap: 10px; 	
 }
 .card-image {
   height: 100px;
@@ -171,17 +182,17 @@ header {
   background-color: white;
   border-radius: 10px;
 }
-.dept-card-image-container, .product-card-image-container {
+.category-card-image-container, .product-card-image-container {
   border-radius: 10px;
   cursor: pointer;
 }
-.dept-card-image-container > button, .product-card-image-container > button {
+.category-card-image-container > button, .product-card-image-container > button {
   padding: 0;
   display: block;
   border-radius: 10px;
   border: 1px solid lightgrey;
 }
-.product-caption {
+.caption {
   margin: 0;
   line-height: 17px;
   overflow: hidden;
@@ -214,13 +225,14 @@ header {
 }
 .hero-container {
   position: relative;
+  height: 40%;
+  background-color: #f4f4f4;
 }
 .hero-header {
   width: calc(100% + 40px);
-  height: 40%;
+  height: 100%; 
   background-size: cover;
   background-position: center;
-  margin-bottom: 25px;
   position: relative;
   left: -20px;
 }
@@ -230,8 +242,8 @@ header {
   transform: scale(0.8);
 }
 .gallery-wrapper {
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   height: 100%;
 }
 .product-gallery-image, .product-gallery-video {
@@ -282,7 +294,7 @@ header {
   border-radius: 10px;
   min-width: 25%;
   max-width: 50%; 
-  filter: drop-shadow(2px 2px 3px grey);
+  box-shadow: 2px 0px 6px 1px grey;
   z-index: 3;
   max-height: 95%;
   overflow: auto;
@@ -306,13 +318,11 @@ header {
   border-bottom: 0;
 }
 #single-item-details li {
-  display: inline-block; 
-}
-#single-item-details li span {
-  margin-right: 5px;
+  display: inline-block;
+  margin-right: 5px; 
 }
 #single-item-name {
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 #full-size-image-container {
   width: 100%;
@@ -349,6 +359,84 @@ header {
 }  */
 .glide__slides {
   height: 100%;
+}
+
+/*FILTER MENU*/
+
+#filter-viewport {
+	left: 75%;
+	max-height: 66%;
+    top: 40%;
+    min-width: 40%; /*todo - media query?*/
+    overflow-x: hidden; 
+}
+#filter-menu-title, #filter-options-title, #filter-options-footer {
+	justify-content: space-between;
+    background-color: #f4f4f4;
+    padding: 10px;
+    position: sticky; 
+}
+#filter-menu-title, #filter-options-title {
+	top: 0; 
+}
+.filter > div {
+	text-align: right;
+    max-width: 75%;
+    align-items: baseline; 
+}
+.filter-choice, .filter-right-arrow {
+	color: lightgrey;
+}
+.filter-choice {
+	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.filter-right-arrow {
+	margin-left: 5px;
+	font-size: 1.5em;
+    line-height: 0;
+    /* position: relative;
+    bottom: -2px;
+    z-index: -1; */ /*we do this because the arrows remain visible in the top row (filter title) if they scroll behind it*/
+}
+#filter-secondary-menu {
+	transition: all 500ms ease-out;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    background-color: white;
+    overflow: auto; 
+}
+#filter-secondary-menu ul {
+	height: 75%;
+	margin-bottom: 10px; 
+	overflow: auto;
+}
+#filter-options-container {
+	padding: 10px; 	
+}
+#filter-options-filter {
+  background-color: lightgrey;
+  border: 0;
+  padding: 10px 10px 10px 40px;    
+  border-radius: 10px;
+  margin-bottom: 10px; 
+}
+input[name="from-price"], input[name="to-price"] {
+	width: 47%;
+	padding: 10px;
+	border: 1px solid lightgrey;
+	border-radius: 5px; 
+}
+#filter-options-price > li > span {
+	padding-top: 10px; 
+}
+#filter-options-footer {
+	position: fixed;
+    bottom: 0;
+    width: 100%; 
 }
 
 /*ERROR MESSAGE*/
@@ -388,9 +476,9 @@ header {
   width: 100%;
   height: 100%;
   position: relative;
-  /* transform: translateZ(0) scale(0.38); */
+  transform: translateZ(0) scale(0.75); 
   backface-visibility: hidden;
-  transform-origin: 0 0; 
+ /*  transform-origin: 0 0; */ 
 }
 .spinner div { box-sizing: content-box; }
 .spinner div {
@@ -474,6 +562,9 @@ header {
 .color-grey {
   color: lightgrey;
 }
+.color-blue {
+	color: #1D6BE0;
+}
 .strike-through {
   text-decoration: line-through;
 }
@@ -483,6 +574,9 @@ header {
 .hide {
   visibility: hidden;
 }
+.overflow-hidden {
+	overflow: hidden !important; 
+}
 .space-between {
   justify-content: space-between;
 }
@@ -490,6 +584,15 @@ header {
 	transform: translate3d(0, 0, 0);
 }
 .slide-out {
-	/* transform: translate3d(5000px, 0, 0); */
-  left: 3000px; 
+	transform: translate3d(2000px, 0, 0); 
+  /*left: 3000px;*/
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 600px) and (-webkit-min-device-pixel-ratio: 2) {
+	#filter-viewport {
+		left: 50%;
+		max-height: 85%;
+		top: 50%;
+		min-width: 75%;
+	} 
 }

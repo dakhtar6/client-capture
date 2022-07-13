@@ -54,7 +54,7 @@
   direction: rtl;
 }
 
-/*THEME*/
+/*THEME - the section below was taken from glide.theme.css*/
 
 .glide__arrow {
   position: absolute;
@@ -115,6 +115,7 @@
 .glide__bullet:focus {
   outline: none;
 }
+/* commented the below section out because it was making it harder to see the bullets */
 /* .glide__bullet:hover, .glide__bullet:focus {
   border: 2px solid white;
   background-color: rgba(255, 255, 255, 0.5);
